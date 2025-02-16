@@ -1,4 +1,0 @@
-gitsa
-aasasa
-as
-asas
