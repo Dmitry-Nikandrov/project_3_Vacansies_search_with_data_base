@@ -1,6 +1,12 @@
+import os
+
 import psycopg2
+from dotenv import load_dotenv
 
 from data.config import psycopg_params
+
+load_dotenv()
+database = os.getenv('database_name')
 
 
 class DBManager:
@@ -9,9 +15,9 @@ class DBManager:
     def __init__(self):
         pass
 
-    def __get_companies_and_vacancies_count(self, params=psycopg_params):
+    def get_companies_and_vacancies_count(self, params=psycopg_params):
         """получает список всех компаний и количество вакансий у каждой компании"""
-        with psycopg2.connect(dbname="postgres", **params) as conn:
+        with psycopg2.connect(dbname=database, **params) as conn:
             conn.autocommit = True
             with conn.cursor() as cur:
                 cur.execute(
@@ -24,18 +30,14 @@ class DBManager:
                 rows = cur.fetchall()
                 print("\nCписок всех компаний и количество вакансий у каждой компании:")
                 for row in rows:
-                    print(row)
+                    print(', '.join(list(map(str, row))))
         conn.close()
         return ""
 
-    @property
-    def get_companies_and_vacancies_count(self):
-        return self.__get_companies_and_vacancies_count()
-
-    def __get_all_vacancies(self, params=psycopg_params):
+    def get_all_vacancies(self, params=psycopg_params):
         """получает список всех вакансий с указанием названия компании,
         названия вакансии и зарплаты и ссылки на вакансию"""
-        with psycopg2.connect(dbname="postgres", **params) as conn:
+        with psycopg2.connect(dbname=database, **params) as conn:
             conn.autocommit = True
             with conn.cursor() as cur:
                 cur.execute(
@@ -47,17 +49,13 @@ class DBManager:
                 rows = cur.fetchall()
                 print("\nСписок всех вакансий с выбранными атрибутами:")
                 for row in rows:
-                    print(row)
+                    print(', '.join(list(map(str, row))))
         conn.close()
         return ""
 
-    @property
-    def get_all_vacancies(self):
-        return self.__get_all_vacancies()
-
-    def __get_avg_salary(self, params=psycopg_params):
+    def get_avg_salary(self, params=psycopg_params):
         """получает среднюю зарплату по вакансиям"""
-        with psycopg2.connect(dbname="postgres", **params) as conn:
+        with psycopg2.connect(dbname=database, **params) as conn:
             conn.autocommit = True
             with conn.cursor() as cur:
                 cur.execute("""
@@ -71,13 +69,9 @@ class DBManager:
         conn.close()
         return ""
 
-    @property
-    def get_avg_salary(self):
-        return self.__get_avg_salary()
-
-    def __get_vacancies_with_higher_salary(self, params=psycopg_params):
+    def get_vacancies_with_higher_salary(self, params=psycopg_params):
         """получает список всех вакансий, у которых зарплата выше средней по всем вакансиям"""
-        with psycopg2.connect(dbname="postgres", **params) as conn:
+        with psycopg2.connect(dbname=database, **params) as conn:
             conn.autocommit = True
             with conn.cursor() as cur:
                 cur.execute(
@@ -92,17 +86,13 @@ class DBManager:
                     "\nСписок всех вакансий с зарплатой выше средней по всем вакансиям:"
                 )
                 for row in rows:
-                    print(row)
+                    print(', '.join(list(map(str, row))))
         conn.close()
         return ""
 
-    @property
-    def get_vacancies_with_higher_salary(self):
-        return self.__get_vacancies_with_higher_salary()
-
     def get_vacancies_with_keyword(self, keyword="менедж", params=psycopg_params):
         """получает список всех вакансий, в названии которых содержатся переданные в метод слова"""
-        with psycopg2.connect(dbname="postgres", **params) as conn:
+        with psycopg2.connect(dbname=database, **params) as conn:
             conn.autocommit = True
             with conn.cursor() as cur:
                 cur.execute(
@@ -116,6 +106,6 @@ class DBManager:
                     "\nСписок всех вакансий с заданным сочетанием букв в названии вакансии:"
                 )
                 for row in rows:
-                    print(row)
+                    print(', '.join(list(map(str, row))))
         conn.close()
         return ""

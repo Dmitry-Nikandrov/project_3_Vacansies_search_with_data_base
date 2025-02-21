@@ -15,7 +15,6 @@ org_id_list = [
     "3676644",
 ]
 
-
 "Параметры для подключения к hh.ru"
 psycopg_params = {
     "host": "localhost",
